@@ -1,0 +1,559 @@
+
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  overflow-y: scroll; /* Ensures scrolling works without displaying the scrollbar */
+  scrollbar-width: 2px; /* For Firefox */
+  
+  padding: 20px;
+}
+
+
+
+
+    h1 {
+      
+      font-size: 10vw; /* Scalable font size */
+      color: #333;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      text-align: center;
+      opacity: 100%;
+      animation: fadeIn 1s forwards 0.5s;
+      z-index: 0;
+    }
+
+    /* Heading Animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Top Bar Styles */
+    .top-bar {
+      width: 100%;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0); /* Transparent background */
+      display: flex;
+      justify-content: center; /* Center buttons horizontally */
+      align-items: center;
+      padding: 0 20px;
+      position: absolute;
+      top: 0;
+      backdrop-filter: blur(0px); /* Optional blur effect for better transparency */
+    }
+
+    /* Logo Styles */
+    .logo {
+      position: absolute;
+      left: 20px; /* Place logo in the top left */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    /* Button Styles */
+    .top-bar .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar button {
+      background-color: transparent; /* Make the inside of the button transparent */
+      color: rgb(0, 0, 0);
+      border: 2px solid black; /* Add black border */
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 11px;
+      border-radius: 30px; /* Make the buttons stadium-shaped */
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; /* Add transition for glowing effect */
+      text-transform: uppercase;
+      z-index: 3;
+    }
+
+    .top-bar button:hover {
+      background-color: #ffffff00; /* Change the background color on hover */
+      color: white; /* Change text color on hover for better contrast */
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.897), 0 0 40px rgba(255, 255, 255, 0.788); /* Glowing effect */
+      border-color: #000000; /* Change border color to white on hover for contrast */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Stadium Container: keep the layout as it is, but reduce the height */
+.stadium-container {
+  display: flex; /* Use flexbox for horizontal layout */
+  justify-content: center; /* Center stadiums with controlled spacing */
+  align-items: center; /* Align items to the top */
+  
+  width: 100%;
+  max-width: 100%; /* Maximum width to avoid excessive spread */
+  height: 500px; /* Adjust container height if needed */
+  position: relative;
+  perspective: 1000px;
+  margin-top: -30px; /* To avoid overlapping with the top bar */
+  flex-wrap: nowrap; /* Prevent wrapping to the next line */
+  gap: 35px; /* Space between the stadiums */
+  overflow: visible;
+}
+
+
+
+/* Stadium Styles: remove the margin-top to bring them to the top */
+.stadium {
+  width: 80px; /* Fixed width */
+  height: 40vh; /* Fixed height */
+  position: relative;
+  
+  margin-top: 50px; /* Remove top margin to align with the top */
+  transform-style: preserve-3d;
+  transform-origin: center center; /* Keep the transformation origin to the top center */
+  transition: all 2s ease-in-out,transform .5s ease, opacity .5s ease;
+  animation: landAnimation 2s ease-out forwards, randomHeight 10s ease-in-out infinite;
+  transform: translateY(0) rotateX(0deg); /* Reset state */
+  opacity: 1; /* Fully visible */
+  
+}
+
+
+.stadium .front,
+.stadium .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 150px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+
+}
+
+/* Front side with background image */
+.stadium .front {
+  background-image: url('images/stadium-image1.jpg'); /* Ensure this file exists */
+}
+
+/* Back side with video */
+.stadium .back {
+  transform: rotateY(180deg);
+  overflow: hidden; /* Ensure video does not overflow */
+}
+
+.stadium .back video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure video covers the entire back */
+  z-index: -1; /* Ensure video stays behind the content */
+}
+
+
+
+.stadium.landAnimation {
+  animation: landAnimation 1s ease-out; /* Apply the landing animation */
+}  
+
+
+
+.stadium.randomHeight {
+  animation: randomHeight 7s ease-in-out infinite;
+}
+
+ 
+
+ /* Random Height Animation */
+@keyframes randomHeight {
+  0% {
+    height: 40vh; /* Initial height */
+  }
+  25% {
+    height: 45vh; /* Gradual increase */
+  }
+  50% {
+    height: 30vh; /* Decrease to the minimum height */
+  }
+  75% {
+    height: 48vh; /* Gradual increase */
+  }
+  100% {
+    height: 40vh; /* Back to original height */
+  }
+}
+
+   /* Landing Animation */
+   @keyframes landAnimation {
+    0% {
+      transform: translateY(100vh) rotateY(30deg); /* Start below the viewport */
+      opacity: 0;
+    }
+    25% {
+      transform: translateY(-10vh) rotateY(80deg); /* Moving up */
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateY(-5vh) rotateY(180deg); /* Flip mid-air */
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(0) rotateY(0deg); /* Final position */
+      opacity: 1; /* Fully visible */
+      
+    }
+  }
+
+/* Apply the height animation to each stadium */
+.stadium:nth-child(1) {
+  animation: landAnimation 2s ease-out, randomHeight 10s ease-in-out infinite .3s;
+}
+.stadium:nth-child(2) {
+  animation: landAnimation 2.2s ease-out, randomHeight 9s ease-in-out infinite 1.2s;
+}
+.stadium:nth-child(3) {
+  animation: landAnimation 2.4s ease-out, randomHeight 7s ease-in-out infinite .4s;
+}
+.stadium:nth-child(4) {
+  animation: landAnimation 2.6s ease-out, randomHeight 5s ease-in-out infinite 1.9s;
+}
+.stadium:nth-child(5) {
+  animation: landAnimation 2.4s ease-out, randomHeight 8s ease-in-out infinite .5s;
+}
+.stadium:nth-child(6) {
+  animation: landAnimation 2.2s ease-out, randomHeight 7s ease-in-out infinite 1.4s;
+}
+.stadium:nth-child(7) {
+  animation: landAnimation 2s ease-out, randomHeight 9s ease-in-out infinite .3s;
+}
+
+
+/* Background Video Styles */
+.background-video-1,
+.background-video-2 {
+  position: absolute; /* Fix videos to the viewport */
+  width: 100%; /* Full width of the screen */
+  height: 80vh; /* Half the viewport height */
+  object-fit: cover; /* Ensure the video covers the area without distortion */
+  z-index: -1; /* Place behind the content */
+}
+
+/* Position the first video at the top */
+.background-video-1 {
+  top: 0; /* Start at the top of the viewport */
+}
+
+/* Position the second video immediately below the first */
+.background-video-2 {
+  top: 80vh; /* Start at half the viewport height */
+}
+
+
+
+
+/* Deck container styles */
+/* Deck container styles */
+.deck {
+  display: flex;
+  flex-direction: column; /* Align items vertically */
+  justify-content: flex-start; /* Align items from the top */
+  align-items: center;
+  width: 100%;
+  height: 400vh; /* Adjusted height for scroll */
+  margin-top: 70px; /* Offset the deck from the top */
+  overflow-y: auto; /* Allows scrolling */
+  position: relative; /* Ensure stacking context works */
+}
+
+/* Individual styles for each card */
+.card1 {
+  width: 0px;
+  height: 0px;
+
+  top: 300px;
+  
+  
+  background-color: #883636; /* Red */
+  z-index: 1; /* Layering order */
+}
+
+
+/* Card 2 */
+.card2 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 400px; /* Adjusted position for card 2 */
+  justify-items: center;
+  margin-left:  90px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.61), rgba(115, 230, 203, 0.603)); /* Gradient with transparency */
+  backgroundimage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 4;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card 3 */
+.card3 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 430px; /* Adjusted position for card 3 */
+  justify-items: center;
+  margin-left:  60px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(119, 179, 127, 0.6)); /* Gradient with transparency */
+  backgroun-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 5;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card 4 */
+.card4 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 460px; /* Adjusted position for card 4 */
+  justify-items: center;
+  margin-left:  30px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(217, 217, 217, 0.6)); /* Gradient with transparency */
+  background-mage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 6;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card 5 */
+.card5 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 490px; /* Adjusted position for card 5 */
+  justify-items: center;
+  margin-right:  0px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(229, 146, 108, 0.6)); /* Gradient with transparency */
+  background-mage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 7;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card 6 */
+.card6 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 520px; /* Adjusted position for card 6 */
+  justify-items: center;
+  margin-right:  30px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(146, 228, 186, 0.6)); /* Gradient with transparency */
+  backgroud-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 8;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Card 7 */
+.card7 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 550px; /* Adjusted position for card 7 */
+  justify-items: center;
+  margin-right:  60px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 102, 0.6)); /* Gradient with transparency */
+  backgroun-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.card8 {
+  width: 900px;
+  height: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 580px; /* Adjusted position for card 7 */
+  justify-items: center;
+  margin-right:  90px;
+  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(88, 138, 167, 0.6)); /* Gradient with transparency */
+  backgroundimage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  backdrop-filter: blur(8px); /* Frosted-glass effect */
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+
+
+
+
+
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  /* Adjust video heights for smaller screens */
+  .background-video-1,
+  .background-video-2 {
+    height: 80vh; /* Maintain half the screen height */
+  }
+
+  h1 {
+    font-size: 7vw;
+    margin-top: 20px;
+  }
+
+  .stadium-container {
+    height: 400px; /* Adjust for smaller screens */
+    margin-top: 50px;
+  }
+
+  .top-bar button {
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Adjust further for very small screens */
+  .background-video-1,
+  .background-video-2 {
+    height: 80vh; /* Still maintain half the screen height */
+  }
+
+  h1 {
+    font-size: 5vw;
+  }
+
+  .stadium-container {
+    height: 20px; /* Adjust for very small screens */
+    margin-top: 150px;
+    gap: 7px;
+  }
+  .stadium{
+  
+  }
+
+  .top-bar button {
+    padding: 4px 6px;
+    font-size: 6px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  .background-video-1,
+  .background-video-2 {
+    height: 80vh; /* Full height of the viewport */
+  }
+
+  h1 {
+    font-size: 4vw; /* Slightly smaller font for very large screens */
+    margin-top: 20px;
+  }
+
+  .stadium-container {
+    height: 500px; /* Larger stadium container for better display */
+    margin-top: 50px;
+  }
+
+  .top-bar button {
+    padding: 10px 18px;
+    font-size: 12px;
+  }
+}
+
+
+
+
+
+  

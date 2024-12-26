@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  
+  
+  <title>portfolio</title>
+  
+  
+  
+  
+  
+  
+  <style>
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+
+
+
+    body {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+         /* Ensures scrolling works without displaying the scrollbar */
+        scrollbar-width: none; /* For Firefox */
+  
+        padding: 0px;
+    }
+
+
+
+    h1 {
+      
+      font-size: 10vw; /* Scalable font size */
+      color: #333;
+      margin-top: 0px;
+      text-align: center;
+      opacity: 100%;
+      animation: fadeIn 1s forwards 0.5s;
+    }
+
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+
+    .top-bar {
+        width: 100%;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0); /* Transparent background */
+        display: flex;
+        justify-content: center; /* Center buttons horizontally */
+        align-items: center;
+        padding: 0 20px;
+        position: absolute;
+        top: 0;
+        backdrop-filter: blur(0px); /* Optional blur effect for better transparency */
+    }
+    
+    
+
+
+
+
+    .logo {
+      position: absolute;
+      left: 20px; /* Place logo in the top left */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+
+
+
+    /* Button Styles */
+    .top-bar .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar button {
+      background-color: transparent; /* Make the inside of the button transparent */
+      color: rgb(0, 0, 0);
+      border: 2px solid black; /* Add black border */
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 11px;
+      border-radius: 30px; /* Make the buttons stadium-shaped */
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; /* Add transition for glowing effect */
+      text-transform: uppercase;
+    }
+
+    .top-bar button:hover {
+      background-color: #ffffff00; /* Change the background color on hover */
+      color: white; /* Change text color on hover for better contrast */
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.897), 0 0 40px rgba(255, 255, 255, 0.788); /* Glowing effect */
+      border-color: #000000; /* Change border color to white on hover for contrast */
+    }
+
+
+
+
+
+
+    .stadium-container {
+      display: flex; /* Use flexbox for horizontal layout */
+      justify-content: center; /* Center stadiums with controlled spacing */
+      align-items: center; /* Align items to the top */
+      width: 100%;
+      max-width: 1200px; /* Maximum width to avoid excessive spread */
+      height: 700px; /* Adjust container height if needed */
+      position: relative;
+      perspective: 1000px;
+      margin-bottom: 200px; /* To avoid overlapping with the top bar */
+      flex-wrap: nowrap; /* Prevent wrapping to the next line */
+      gap: 20px; /* Space between the stadiums */
+      overflow: visible;
+    }
+
+
+    .strigger-container {
+      display: flex; /* Use flexbox for horizontal layout */
+      justify-content: center; /* Center stadiums with controlled spacing */
+      align-items: center; /* Align items to the top */
+      width: 100%;
+      max-width: 1200px; /* Maximum width to avoid excessive spread */
+      height: 700px; /* Adjust container height if needed */
+      position: relative;
+      perspective: 1000px;
+      margin-bottom: 200px; /* To avoid overlapping with the top bar */
+      flex-wrap: nowrap; /* Prevent wrapping to the next line */
+      gap: 20px; /* Space between the stadiums */
+      overflow: visible;
+    }
+
+
+
+
+    .strigger {
+       width: 150px; /* Fixed width */
+       height: 500px; /* Fixed height */
+       position: relative;
+       margin-top: 0px; /* Remove top margin to align with the top */
+       z-index: 0;
+       opacity: 0; 
+  
+    }
+
+
+
+
+
+
+    .stadium {
+       width: 150px; /* Fixed width */
+       height: 500px; /* Fixed height */
+       position: relative;
+       margin-top: 0px; /* Remove top margin to align with the top */
+       transform-style: preserve-3d;
+       transform-origin: center bottom; /* Keep the transformation origin to the top center */
+       transition: all 2s ease-in-out,transform .5s ease, opacity .5s ease;
+       animation: landAnimation 2s ease-out forwards, randomHeight 10s ease-in-out infinite;
+       transform: translateY(0) rotateX(0deg); /* Reset state */
+       opacity: 1; /* Fully visible */
+  
+    }
+
+
+
+
+
+
+    .strigger:hover ~ .stadium {
+        transform: rotateY(180deg);
+    }
+
+
+
+
+
+    .stadium .front,
+.stadium .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 150px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+
+}
+
+/* Front side with background image */
+.stadium .front {
+  background-image: url('images/stadium-image1.jpg'); /* Ensure this file exists */
+}
+
+/* Back side with video */
+.stadium .back {
+  transform: rotateY(180deg);
+  overflow: hidden; /* Ensure video does not overflow */
+}
+
+.stadium .back video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensure video covers the entire back */
+  z-index: -1; /* Ensure video stays behind the content */
+}
+
+    /* Landing Animation */
+    @keyframes landAnimation {
+      0% {
+        transform: translateY(100vh) rotateY(30deg); /* Start below the viewport */
+        opacity: 0;
+      }
+      25% {
+        transform: translateY(-10vh) rotateY(80deg); /* Moving up */
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(-5vh) rotateY(180deg); /* Flip mid-air */
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(0) rotateY(0deg); /* Final position */
+        opacity: 1; /* Fully visible */
+        
+      }
+    }
+
+
+
+
+ /* Random Height Animation */
+@keyframes randomHeight {
+  0% {
+    height: 500px; /* Initial height */
+  }
+  25% {
+    height: 705px; /* Gradual increase */
+  }
+  50% {
+    height: 450px; /* Decrease to the minimum height */
+  }
+  75% {
+    height: 700px; /* Gradual increase */
+  }
+  100% {
+    height: 500px; /* Back to original height */
+  }
+}
+
+/* Apply the height animation to each stadium */
+.stadium:nth-child(1) {
+  animation: landAnimation 2s ease-out, randomHeight 10s ease-in-out infinite 3s;
+}
+.stadium:nth-child(2) {
+  animation: landAnimation 2.2s ease-out, randomHeight 13s ease-in-out infinite 4.2s;
+}
+.stadium:nth-child(3) {
+  animation: landAnimation 2.4s ease-out, randomHeight 10s ease-in-out infinite 5.4s;
+}
+.stadium:nth-child(4) {
+  animation: landAnimation 2.6s ease-out, randomHeight 9s ease-in-out infinite 3.6s;
+}
+.stadium:nth-child(5) {
+  animation: landAnimation 2.4s ease-out, randomHeight 11s ease-in-out infinite 3.8s;
+}
+.stadium:nth-child(6) {
+  animation: landAnimation 2.2s ease-out, randomHeight 12s ease-in-out infinite 4s;
+}
+.stadium:nth-child(7) {
+  animation: landAnimation 2s ease-out, randomHeight 10s ease-in-out infinite 4.2s;
+}
+    /* Video Styles */
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1; /* Ensure video is behind other content */
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 6vw;
+      }
+      .stadium-container {
+        height: 400px; /* Adjust stadium container height for smaller screens */
+      }
+      .top-bar button {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 8vw;
+      }
+      .stadium-container {
+        height: 300px; /* Adjust for very small screens */
+      }
+      .top-bar button {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+    }
+
+    /* Add extra content to make the page longer */
+    .extra-content {
+      height: 5000px; /* Adjust height to make the page scrollable */
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+
+
+
+    <body>
+         <!-- Top Bar with Logo and Buttons -->
+  <div class="top-bar">
+    <div class="logo">
+      <img src="images/new-image.jpg" alt="Logo"> <!-- Replace with your logo image path -->
+    </div>
+    <div class="buttons">
+      <button>Button 1</button>
+      <button>Button 2</button>
+      <button>Button 3</button>
+      <button>Button 4</button>
+      <button>Button 5</button>
+    </div>
+  </div>
+
+  <h1>karpon</h1>
+
+
+
+
+  <div class="strigger-container">
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    <div class="strigger"></div>
+    </div>
+
+  <div class="stadium-container">
+    <!-- Stadium Elements -->
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back">
+        <video autoplay muted loop>
+          <source src="videos/bg.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+    <div class="stadium">
+      <div class="front"></div>
+      <div class="back"></div>
+    </div>
+  </div>
+
+
+
+
+  <div class="extra-content"></div> <!-- Extra content to enable scrolling -->
+
+  <!-- Background Video -->
+  <video autoplay muted loop>
+    <source src="videos/bg.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+
+
+    </body>
+
+
+
+
+
+    </html>
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /* Button Styles */
+    .top-bar .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar button {
+      background-color: transparent; /* Make the inside of the button transparent */
+      color: rgb(0, 0, 0);
+      border: 2px solid black; /* Add black border */
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 11px;
+      border-radius: 30px; /* Make the buttons stadium-shaped */
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease; /* Add transition for glowing effect */
+      text-transform: uppercase;
+    }
+
+    .top-bar button:hover {
+      background-color: #ffffff00; /* Change the background color on hover */
+      color: white; /* Change text color on hover for better contrast */
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.897), 0 0 40px rgba(255, 255, 255, 0.788); /* Glowing effect */
+      border-color: #000000; /* Change border color to white on hover for contrast */
+    }
