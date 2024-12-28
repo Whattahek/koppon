@@ -6,18 +6,23 @@
       box-sizing: border-box;
     }
 
-    body {
+  body {
   height: 100%;
-  display: flex;
+  display: 100vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f0f0f0;
-  overflow-y: scroll; /* Ensures scrolling works without displaying the scrollbar */
-  scrollbar-width: 2px; /* For Firefox */
-  
-  padding: 20px;
-}
+  -ms-overflow-style: none;
+  overflow-y:  hidden; /* Ensures scrolling works without displaying the scrollbar */
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -ms-overflow-style: none;
+  }
+
+  .body::-webkit-scrollbar{
+    display: none;
+  }
+
 
 
 
@@ -260,15 +265,38 @@
   animation: landAnimation 2s ease-out, randomHeight 9s ease-in-out infinite .3s;
 }
 
+@keyframes jiggle {
+  0% {
+    transform: translateY(0) rotateY(0deg); /* Start at final position */
+    opacity: 1; /* Fully visible */
+  }
+  50% {
+    transform: translateY(-5vh) rotateY(180deg); /* Flip mid-air */
+    opacity: 0.9;
+  }
+  75% {
+    transform: translateY(-10vh) rotateY(80deg); /* Moving down */
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(100vh) rotateY(30deg); /* End below the viewport */
+    opacity: 0; /* Fully invisible */
+  }
+}
+
+.stadium.jiggle {
+  animation: jiggle 0.5s ease-in-out;
+}
+
 
 /* Background Video Styles */
 .background-video-1,
 .background-video-2 {
   position: absolute; /* Fix videos to the viewport */
   width: 100%; /* Full width of the screen */
-  height: 80vh; /* Half the viewport height */
+  height: 50vh; /* Half the viewport height */
   object-fit: cover; /* Ensure the video covers the area without distortion */
-  z-index: -1; /* Place behind the content */
+  z-index: -2; /* Place behind the content, below .bg */
 }
 
 /* Position the first video at the top */
@@ -278,157 +306,234 @@
 
 /* Position the second video immediately below the first */
 .background-video-2 {
-  top: 80vh; /* Start at half the viewport height */
+  top: 50vh; /* Start at half the viewport height */
 }
 
-
-
-
-/* Deck container styles */
-/* Deck container styles */
-.deck {
-  display: flex;
-  flex-direction: column; /* Align items vertically */
-  justify-content: flex-start; /* Align items from the top */
-  align-items: center;
+.bg {
+  position: fixed;
+  top: 70vh; /* Initially positioned at 70vh */
+  left: 0;
   width: 100%;
-  height: 400vh; /* Adjusted height for scroll */
-  margin-top: 70px; /* Offset the deck from the top */
-  overflow-y: auto; /* Allows scrolling */
-  position: relative; /* Ensure stacking context works */
+  height: 0; /* Initially hidden */
+  background-color: black;
+  z-index: 1; /* Ensure it's above all other content */
+  transition: height 1s ease, opacity 1s ease; /* Smooth animation for both height and opacity */
+  opacity: 0; /* Initially invisible */
 }
 
-/* Individual styles for each card */
-.card1 {
-  width: 0px;
-  height: 0px;
+.deck {
+  position: relative;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  margin-top: -600px;
+  z-index: 2;
+  padding: 0 20vw; /* Add padding to the left and right to create space for overflow */
+  overflow: visible; /* Allow content to overflow horizontally */
+  display: flex; /* Flexbox for columns */
+  gap: 20px; /* Add spacing between columns */
+  justify-content: center; /* Center the columns horizontally */
+}
 
-  top: 300px;
+.column {
+  width: 1000px; /* Fixed width for each column */
+  height: 30000px; /* Full height of the container */
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Stack cards vertically */
+  gap: 20px; /* Add spacing between cards */
+}
+
+
+
+.column-1 {
+
+  margin-top: 200vh;
+  animation: none; /* Apply the animation */
+}
+
+.column-2 {
+
+  margin-top: -300vh;
+  animation: none; /* Apply the animation */
   
+}
+
+.column-3 {
+
+  margin-top: 200vh;
+  animation: none; /* Apply the animation */
   
-  background-color: #883636; /* Red */
-  z-index: 1; /* Layering order */
 }
 
 
-/* Card 2 */
-.card2 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 400px; /* Adjusted position for card 2 */
-  justify-items: center;
-  margin-left:  90px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.61), rgba(115, 230, 203, 0.603)); /* Gradient with transparency */
-  backgroundimage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 4;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+
+.column-4 {
+
+  margin-top: -300vh;
+  animation: none; /* Apply the animation */
+  
 }
 
-/* Card 3 */
-.card3 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 430px; /* Adjusted position for card 3 */
-  justify-items: center;
-  margin-left:  60px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(119, 179, 127, 0.6)); /* Gradient with transparency */
-  backgroun-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 5;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.column-5 {
+
+  margin-top: 200vh;
+  animation: none; /* Apply the animation */
 }
 
-/* Card 4 */
-.card4 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 460px; /* Adjusted position for card 4 */
-  justify-items: center;
-  margin-left:  30px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(217, 217, 217, 0.6)); /* Gradient with transparency */
-  background-mage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 6;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Card 5 */
-.card5 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 490px; /* Adjusted position for card 5 */
-  justify-items: center;
-  margin-right:  0px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(229, 146, 108, 0.6)); /* Gradient with transparency */
-  background-mage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 7;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Card 6 */
-.card6 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 520px; /* Adjusted position for card 6 */
-  justify-items: center;
-  margin-right:  30px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(146, 228, 186, 0.6)); /* Gradient with transparency */
-  backgroud-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 8;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Card 7 */
-.card7 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 550px; /* Adjusted position for card 7 */
-  justify-items: center;
-  margin-right:  60px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 102, 0.6)); /* Gradient with transparency */
-  backgroun-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 9;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.card {
+  width: 500px; /* Card takes up full width of the column */
+  height: 400px; /* Fixed height for each card */
+  background-color: hsl(203, 5%, 33%);
+  border-radius: 0;
+  position: relative;
+  opacity: 1;
+  margin: 0 auto; /* Center cards within the column */
 }
 
 
-.card8 {
-  width: 900px;
-  height: 400px;
-  border-radius: 10px;
-  position: absolute;
-  top: 580px; /* Adjusted position for card 7 */
-  justify-items: center;
-  margin-right:  90px;
-  background: linear-gradient(50deg, rgba(255, 255, 255, 0.6), rgba(88, 138, 167, 0.6)); /* Gradient with transparency */
-  backgroundimage: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Texture */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1); /* Shadow effect */
-  backdrop-filter: blur(8px); /* Frosted-glass effect */
-  z-index: 10;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Keyframe animation for column-3 */
+@keyframes columnEnter {
+  0% {
+    margin-top: 100vh; /* Start from below the screen */
+    gap: 700px; /* Large gap between cards */
+    transform: scale(0.7); /* Start smaller, with a scale transformation */
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    
+    gap: 700px; /* Keep the gap wide while moving up */
+    
+  }
+  80% {
+    margin-top: -75vh;
+    opacity: 1;
+  }
+  
+  100% {
+    margin-top: -20vh; /* Final position after animation (fall into place) */
+    gap: 20px; /* Reduce gap to 15px */
+    transform: scale(1); /* Final size of the column */
+    opacity: 1;
+  }
 }
+
+/* Keyframe animation for column-3 */
+@keyframes columnExit {
+
+  0% {
+    margin-top: -200vh; /* Start from below the screen */
+    gap: 200px; /* Large gap between cards */
+    transform: scale(1.2); /* Start smaller, with a scale transformation */
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    
+    gap: 100px; /* Keep the gap wide while moving up */
+    
+  }
+  80% {
+    margin-top: 2vh;
+    opacity: 1;
+  }
+  
+  100% {
+    margin-top: -20vh; /* Final position after animation (fall into place) */
+    gap: 20px; /* Reduce gap to 15px */
+    transform: scale(1); /* Final size of the column */
+    opacity: 1;
+  }
+
+} 
+
+/* Remove animation by default */
+.column-enter,
+.column-exit {
+  animation: none;
+}
+
+.column-enter {
+  animation: columnEnter 4s forwards;
+}
+
+.column-exit {
+  animation: columnExit 4s forwards;
+}
+
+/* Initial state for .card33 */
+.card33 {
+  background-color: pink;
+  width: 500px;  /* Initial size */
+  height: 400px;  /* Initial size */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  opacity: 0;  /* Initially hidden */
+  z-index: 3;  /* Ensure it's above other elements */
+  position: absolute;  /* Absolute positioning to control placement */
+  top: 0;  /* Will be dynamically set via JS */
+  left: 0;  /* Will be dynamically set via JS */
+  transition: opacity 1s ease-in-out;  /* Optional smooth opacity transition */
+}
+
+/* Apply the animation when the expandToCover class is added */
+.card33.expandToCover {
+  animation: expandToCover 4s ease-in-out forwards;
+}
+
+@keyframes expandToCover {
+  0% {
+    width: 500px;
+    height: 400px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  50% {
+    width: 100vw;  /* Full viewport width */
+    height: 100vh;  /* Full viewport height */
+    top: 0;
+    left: 0;
+    opacity: 0.7;  /* Midway opacity */
+  }
+  100% {
+    width: 100vw;  /* Full viewport width */
+    height: 100vh;  /* Full viewport height */
+    top: 0;
+    left: 0;
+    opacity: 1;  /* Fully visible */
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -484,7 +589,7 @@
   /* Adjust video heights for smaller screens */
   .background-video-1,
   .background-video-2 {
-    height: 80vh; /* Maintain half the screen height */
+    height: 50vh; /* Maintain half the screen height */
   }
 
   h1 {
@@ -507,7 +612,7 @@
   /* Adjust further for very small screens */
   .background-video-1,
   .background-video-2 {
-    height: 80vh; /* Still maintain half the screen height */
+    height: 50vh; /* Still maintain half the screen height */
   }
 
   h1 {
@@ -533,12 +638,16 @@
 @media (min-width: 1200px) {
   .background-video-1,
   .background-video-2 {
-    height: 80vh; /* Full height of the viewport */
+    height: 50vh; /* Full height of the viewport */
   }
 
   h1 {
     font-size: 4vw; /* Slightly smaller font for very large screens */
     margin-top: 20px;
+  }
+  .bg {
+    margin-top: 50vh;
+    top: -180px;
   }
 
   .stadium-container {

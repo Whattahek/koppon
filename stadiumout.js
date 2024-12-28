@@ -1,61 +1,120 @@
-// Function to handle scroll event for flipping, scaling, opacity, and height
-function handleScroll() {
-  const stadiums = document.querySelectorAll('.stadium');
-  const scrollY = window.scrollY;
+let isFadedOut = false; // To track if the elements are faded out
+let lineAppeared = false; // To track if the black line has appeared
 
-  // Iterate over each stadium element
-  stadiums.forEach((stadium, index) => {
-    const scaleValue = Math.min(0.2 + scrollY * 0.01, 1.3);
-    const opacityValue = 0;
-    const heightValue = 0;
-    const gapValue = 35;
-    const translateYValue = 1000;
+// Create the black line element if it's not in the HTML
+const blackLine = document.querySelector('.bg');
 
-    stadium.style.transition = 'transform 1s ease-out, opacity 0.5s ease-out, height 0.5s ease-out, margin-bottom 0.5s ease-out';
-    stadium.style.transform = `rotateY(${scrollY * 4}deg) translateY(${translateYValue}px) scale(${scaleValue})`;
-    stadium.style.opacity = opacityValue.toString();
-    stadium.style.height = `${heightValue}px`;
-    stadium.style.marginBottom = `${gapValue}px`;
-  });
-}
+let startY = 0; // Initial touch position
+let isTouching = false; // To track if a touch event is ongoing
 
-// Function to trigger the "landAnimation" when scrolling back up
-function landAnimation() {
+// Function to handle scroll (mouse wheel or touch delta)
+function handleMouseWheel(delta) {
   const stadiums = document.querySelectorAll('.stadium');
 
-  stadiums.forEach(stadium => {
-    // Apply landing animation when scrolling up
-    stadium.style.transition = 'transform 1s ease, opacity 1s ease, height 1s ease'; // Slow transition for landing effect
-    stadium.style.transform = 'rotateY(0deg) scale(1)'; // Reset to original size and rotation
-    stadium.style.opacity = '1'; // Restore opacity to 1 (fully visible)
-    stadium.style.height = '300px'; // Restore original height (300px)
+  // Scroll down (delta > 0)
+  if (delta > 0) {
+    if (!isFadedOut) {
+      isFadedOut = true;
 
-    // Add the landing animation class to restore the animation
-    stadium.classList.add('land-animation');
-    
-    // Restart the random height animation after land animation
+      stadiums.forEach((stadium) => {
+        stadium.style.transition = 'transform 2s ease, opacity 2s ease, height 2s ease'; // Slower transition
+        stadium.style.opacity = '0'; // Fade out
+        stadium.classList.add('jiggle'); // Add jiggle animation
+      });
+
+      // Expand the black line and make it visible
+      blackLine.style.transition = 'height 2s ease, opacity 2s ease, margin-top 2s ease'; // Slower transition for the black line
+      blackLine.style.height = '200vh';
+      blackLine.style.opacity = '1';
+      blackLine.style.marginTop = "-70vh";
+
+      // Trigger additional animations after the transition
+      blackLine.addEventListener('transitionend', triggerAnlog);
+    }
+
+    // Trigger subsequent animations with delays
     setTimeout(() => {
-      stadium.classList.remove('land-animation'); // Remove land animation class after it's done
-      stadium.classList.add('random-height'); // Reapply random height animation
-    }, 1000); // Ensure the land animation runs before random height restarts
-  });
+      stadiums.forEach((stadium) => {
+        stadium.style.transition = 'transform 2.5s ease, opacity 2.5s ease'; // Slower land animation
+        stadium.classList.add('land-animation'); // Add land animation for fade-in
+      });
+
+      setTimeout(() => {
+        stadiums.forEach((stadium) => {
+          stadium.style.transition = 'height 3s ease'; // Slow randomHeight animation
+          stadium.classList.add('random-height'); // Start randomHeight animation
+        });
+      }, 1500); // Increased delay to allow for slower animations
+    }, 1500); // Increased delay to ensure the black line animation completes first
+  }
+
+  // Scroll up (delta < 0)
+  else if (delta < 0) {
+    if (isFadedOut) {
+      isFadedOut = false;
+
+      stadiums.forEach((stadium) => {
+        stadium.style.transition = 'transform 2s ease, opacity 2s ease, height 2s ease'; // Slower transition
+        stadium.style.opacity = '1'; // Fade in
+        stadium.style.height = '300px'; // Restore original height
+        stadium.style.transform = 'translateY(0)'; // Reset position
+        stadium.classList.add('land-animation'); // Add land animation
+        stadium.classList.remove('jiggle'); // Remove the jiggle effect
+      });
+
+      // Trigger randomHeight animation after a delay
+      setTimeout(() => {
+        stadiums.forEach((stadium) => {
+          stadium.style.transition = 'height 3s ease'; // Slow randomHeight animation
+          stadium.classList.add('random-height'); // Start randomHeight animation
+        });
+      }, 1500); // Increased delay to allow for slower animations
+
+      // Collapse the black line and make it invisible
+      blackLine.style.transition = 'height 2s ease, opacity 2s ease, margin-top 2s ease'; // Slower transition for the black line
+      blackLine.style.height = '0';
+      blackLine.style.opacity = '0';
+    }
+  }
 }
 
-// Listen for scroll events
+// Function to trigger anlog script after the black line has finished fading in
+function triggerAnlog() {
+  if (blackLine.style.height === '200vh') {
+    anlog(); // Assuming anlog() is a function defined elsewhere
+  }
+}
+
+// Mouse wheel event listener
 let isScrolling = false;
-window.addEventListener('scroll', function () {
+window.addEventListener('wheel', function (event) {
   if (!isScrolling) {
     isScrolling = true;
     requestAnimationFrame(function () {
-      // Handle scroll logic for flipping, scaling, opacity, and height
-      handleScroll();
-
-      // If we are near the top of the page, trigger the "landAnimation"
-      if (window.scrollY === 0) {
-        landAnimation();
-      }
-
+      handleMouseWheel(event.deltaY || event.detail || -event.wheelDelta);
       isScrolling = false;
     });
   }
+}, { passive: false });
+
+// Touch event listeners for mobile scrolling
+window.addEventListener('touchstart', (event) => {
+  isTouching = true;
+  startY = event.touches[0].clientY; // Record initial touch position
+}, { passive: false });
+
+window.addEventListener('touchmove', (event) => {
+  if (isTouching) {
+    const currentY = event.touches[0].clientY; // Get current touch position
+    const delta = startY - currentY; // Calculate scroll delta (negative for up, positive for down)
+    handleMouseWheel(delta); // Pass delta to the existing scroll handler
+    startY = currentY; // Update startY for continuous scrolling
+
+    // Prevent default scrolling behavior
+    event.preventDefault();
+  }
+}, { passive: false });
+
+window.addEventListener('touchend', () => {
+  isTouching = false; // Reset the touch state
 });
